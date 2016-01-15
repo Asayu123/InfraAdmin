@@ -3,7 +3,6 @@ from django.core import validators
 
 # Create your models here.
 
-
 class Environment(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
 
@@ -12,7 +11,7 @@ class Environment(models.Model):
 
 
 class DataCenter(models.Model):
-    #POS_CHOICES = (('front', 'フロント'), ('back', 'バック'), ('kibi', '機微'))
+
     name = models.CharField(max_length=32, primary_key=True)
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
 
@@ -39,7 +38,7 @@ class Rack(models.Model):
         return self.name
 
 
-class HypervisorUsage(models.Model):# Like "DB","SPARE"
+class HypervisorUsage(models.Model):  # Like "DB","SPARE"
     name = models.CharField(max_length=64, primary_key=True)
 
     def __str__(self):
@@ -53,12 +52,12 @@ class PhysicalServer(models.Model):
     usage = models.CharField(max_length=128)
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
 
-    #following info is used when visualizing server layout
-    rack_name = models.ForeignKey('Rack', to_field='name',on_delete=models.PROTECT)
+    # following info is used when visualizing server layout
+    rack_name = models.ForeignKey('Rack', to_field='name', on_delete=models.PROTECT)
     rack_unit_start = models.PositiveIntegerField()
     rack_unit_end = models.PositiveIntegerField()
 
-    #following attribute is for logging.
+    # following attribute is for logging.
     creation_date = models.DateTimeField()
     modified_date = models.DateTimeField()
 
@@ -70,8 +69,8 @@ class HypervisorHost(models.Model):
 
     # specification
     cpu_core_num = models.PositiveIntegerField()
-    memory_capacity_GB = models.PositiveIntegerField() #GigaByte
-    hdd_capacity_GB = models.PositiveIntegerField() #GigaByte
+    memory_capacity_GB = models.PositiveIntegerField()  # GigaByte
+    hdd_capacity_GB = models.PositiveIntegerField()  # GigaByte
 
     # following attribute is for logging.
     creation_date = models.DateTimeField()
@@ -95,7 +94,7 @@ class Datastore(models.Model):
         return self.name
 
 
-class NFS_Storage(models.Model): # Use this table to define NFS Datastore's network Path.
+class NFS_Storage(models.Model):  # Use this table to define NFS Datastore's network Path.
     datastore_name = models.OneToOneField('Datastore', to_field='name', primary_key=True, on_delete=models.PROTECT)
     ipaddr = models.GenericIPAddressField()
     path = models.CharField(max_length=128)
@@ -104,7 +103,7 @@ class NFS_Storage(models.Model): # Use this table to define NFS Datastore's netw
         return self.datastore_name
 
 
-class VLAN(models.Model):# Define Relationship between VLANID , Usage , IPRange
+class VLAN(models.Model):  # Define Relationship between VLANID , Usage , IPRange
     id = models.IntegerField(primary_key=True, validators=[validators.MinValueValidator(0),validators.MaxValueValidator(4096)])
     usage = models.CharField(max_length=256)
     nwaddr = models.GenericIPAddressField()
@@ -124,12 +123,12 @@ class VirtualMachine(models.Model):
 
     # following attribute is linked to another table.
 
-    hypervisor_name = models.ForeignKey('HypervisorHost', to_field='name', on_delete=models.PROTECT)
+    hypervisorhost_name = models.ForeignKey('HypervisorHost', to_field='name', on_delete=models.PROTECT)
     vminstalledsoftware_name = models.ManyToManyField('VmInstalledSoftware')
     vmserverspectest_name = models.ManyToManyField('VmServerSpecTest')
     vmchefrecipe_name = models.ManyToManyField('VmChefRecipe')
 
-    #following attribute is for logging.
+    # following attribute is for logging.
     creation_date = models.DateTimeField()
     modified_date = models.DateTimeField()
 
@@ -139,19 +138,19 @@ class VirtualMachine(models.Model):
 
 class VmAttachedVirtualHDD(models.Model):
     id = models.AutoField(primary_key=True)
-    virtualmachine_name = models.ForeignKey('VirtualMachine', to_field='name',on_delete=models.CASCADE)
+    virtualmachine_name = models.ForeignKey('VirtualMachine', to_field='name', on_delete=models.CASCADE)
     mount_point = models.CharField(max_length=256)
     capacity_GB = models.PositiveIntegerField()  # Unit is GigaByte will be Stored
     datastore_name = models.ForeignKey('Datastore', to_field='name', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.id
+        return self.virtualmachine_name
 
 
 class VmAttachedVirtualNIC(models.Model):
     id = models.AutoField(primary_key=True)
-    virtualmachine_name = models.ForeignKey('VirtualMachine', to_field='name', on_delete=models.CASCADE)  # vmID will be "id" that has been created in schema "VirtualMachine"
-    vLAN_id = models.ForeignKey('VLAN', to_field='id',on_delete=models.PROTECT)
+    virtualmachine_name = models.ForeignKey('VirtualMachine', to_field='name', on_delete=models.CASCADE)
+    vLAN_id = models.ForeignKey('VLAN', to_field='id', on_delete=models.PROTECT)
     IP_Address = models.GenericIPAddressField()
 
     def __str__(self):
