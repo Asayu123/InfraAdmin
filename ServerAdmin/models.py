@@ -3,6 +3,7 @@ from django.core import validators
 
 # Create your models here.
 
+
 class Environment(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
 
@@ -19,8 +20,16 @@ class DataCenter(models.Model):
         return self.name
 
 
+class VCenterClusterUsage(models.Model):  # for example , "frontend" "backend" "db" etc...
+    name = models.CharField(max_length=128, primary_key=True)
+
+    def __str__(self):
+        return self.name
+
+
 class VCenterCluster(models.Model):
-    name = models.CharField(max_length=32, primary_key=True)
+    name = models.CharField(max_length=64, primary_key=True)
+    VCenterClusterUsage_name = models.ForeignKey('VCenterClusterUsage', to_field='name', on_delete=models.PROTECT)
     HA_available = models.BooleanField()
     DataCenter_name = models.ForeignKey('DataCenter', to_field='name', on_delete=models.PROTECT)
 
@@ -29,7 +38,8 @@ class VCenterCluster(models.Model):
 
 
 class Rack(models.Model):
-    name = models.CharField(max_length=64, primary_key=True)  # strings
+    name = models.CharField(max_length=64, primary_key=True)  # for human readable name
+    serial = models.CharField(max_length=128, unique=True)
     console_name = models.CharField(max_length=64, unique=True)  # string, match to node number,console number
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
     num_of_unit = models.IntegerField(default=32)
@@ -38,19 +48,16 @@ class Rack(models.Model):
         return self.name
 
 
-class HypervisorUsage(models.Model):  # Like "DB","SPARE"
-    name = models.CharField(max_length=64, primary_key=True)
-
-    def __str__(self):
-        return self.name
-
-
 class PhysicalServer(models.Model):
     serial = models.CharField(max_length=64, primary_key=True)
-    name = models.CharField(max_length=64, unique=True)
-    product_name = models.CharField(max_length=64)
-    usage = models.CharField(max_length=128)
+    product_name = models.CharField(max_length=64)  # SELECT FROM LIST IN FUTURE DEVELOPMENT
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
+
+    # specification
+    cpu_core_num = models.PositiveIntegerField(help_text="[Core]") #Core
+    cpu_socket_num = models.PositiveIntegerField(help_text="use this field for License Evaluation")
+    memory_capacity = models.PositiveIntegerField(help_text="[GB]")  # GigaByte
+    hdd_capacity = models.PositiveIntegerField(help_text="[GB]")  # GigaByte
 
     # following info is used when visualizing server layout
     rack_name = models.ForeignKey('Rack', to_field='name', on_delete=models.PROTECT)
@@ -61,16 +68,14 @@ class PhysicalServer(models.Model):
     creation_date = models.DateTimeField()
     modified_date = models.DateTimeField()
 
+    def __str__(self):
+        return self.serial
+
 
 class HypervisorHost(models.Model):
     # management data
     name = models.CharField(max_length=64, primary_key=True)
     reserved = models.BooleanField(default=False)
-
-    # specification
-    cpu_core_num = models.PositiveIntegerField()
-    memory_capacity_GB = models.PositiveIntegerField()  # GigaByte
-    hdd_capacity_GB = models.PositiveIntegerField()  # GigaByte
 
     # following attribute is for logging.
     creation_date = models.DateTimeField()
@@ -78,8 +83,7 @@ class HypervisorHost(models.Model):
 
     # reference
     vCenterCluster_name = models.ForeignKey('VCenterCluster', to_field='name', on_delete=models.PROTECT)
-    physicalserver_name = models.OneToOneField('PhysicalServer', to_field='name', on_delete=models.PROTECT)
-    hypervisorusage_name = models.ForeignKey('HypervisorUsage', to_field='name', on_delete=models.PROTECT)
+    PhysicalServer_serial = models.OneToOneField('PhysicalServer', to_field='serial', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -88,7 +92,6 @@ class HypervisorHost(models.Model):
 class Datastore(models.Model):
     name = models.CharField(max_length=64, primary_key=True)
     description = models.CharField(max_length=256)
-    capacity = models.PositiveIntegerField()  # Unit is GigaByte
 
     def __str__(self):
         return self.name
@@ -98,9 +101,10 @@ class NFS_Storage(models.Model):  # Use this table to define NFS Datastore's net
     datastore_name = models.OneToOneField('Datastore', to_field='name', primary_key=True, on_delete=models.PROTECT)
     ipaddr = models.GenericIPAddressField()
     path = models.CharField(max_length=128)
+    capacity = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte
 
     def __str__(self):
-        return self.datastore_name
+        return str(self.datastore_name)  # if we want to return foreignkey, need to cast string object.
 
 
 class VLAN(models.Model):  # Define Relationship between VLANID , Usage , IPRange
@@ -109,17 +113,19 @@ class VLAN(models.Model):  # Define Relationship between VLANID , Usage , IPRang
     nwaddr = models.GenericIPAddressField()
     prefix = models.IntegerField(validators=[validators.MinValueValidator(1), validators.MaxValueValidator(32)])
 
+    def __str__(self):
+        return str(self.id)
+
 
 class VirtualMachine(models.Model):
     # id = models.AutoField(primary_key=True) is defined Automatically, implicitly
     # HDD and NIC information is stored in another schema (i.e:List / Table)
     name = models.CharField(max_length=64, primary_key=True)
     usage = models.CharField(max_length=256)
-    os = models.CharField(max_length=64)
-    cpu = models.PositiveIntegerField()
-    memory_GB = models.PositiveIntegerField()  # Unit is GigaByte
+    os = models.CharField(max_length=64)                       # SELECT FROM LIST IN FUTURE DEVELOPMENT
+    cpu = models.PositiveIntegerField(help_text="[core]")
+    memory_GB = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte
     HA_required = models.BooleanField()
-    note = models.CharField(max_length=1024)
 
     # following attribute is linked to another table.
 
@@ -140,7 +146,7 @@ class VmAttachedVirtualHDD(models.Model):
     id = models.AutoField(primary_key=True)
     virtualmachine_name = models.ForeignKey('VirtualMachine', to_field='name', on_delete=models.CASCADE)
     mount_point = models.CharField(max_length=256)
-    capacity_GB = models.PositiveIntegerField()  # Unit is GigaByte will be Stored
+    capacity = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte will be Stored
     datastore_name = models.ForeignKey('Datastore', to_field='name', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -154,7 +160,7 @@ class VmAttachedVirtualNIC(models.Model):
     IP_Address = models.GenericIPAddressField()
 
     def __str__(self):
-        return self.id
+        return str(self.virtualmachine_name)
 
 
 class VmInstalledSoftware(models.Model):
