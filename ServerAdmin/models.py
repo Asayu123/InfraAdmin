@@ -48,9 +48,16 @@ class Rack(models.Model):
         return self.name
 
 
+class PhysicalServerProduct(models.Model):
+    name = models.CharField(max_length=128, primary_key=True)
+
+    def __str__(self):
+        return self.name
+
+
 class PhysicalServer(models.Model):
     serial = models.CharField(max_length=64, primary_key=True)
-    product_name = models.CharField(max_length=64)  # SELECT FROM LIST IN FUTURE DEVELOPMENT
+    physicalServerProduct_name = models.ForeignKey('PhysicalServerProduct', to_field='name', on_delete=models.PROTECT)
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
 
     # specification
@@ -117,12 +124,19 @@ class VLAN(models.Model):  # Define Relationship between VLANID , Usage , IPRang
         return str(self.id)
 
 
+class OperatingSystem(models.Model):
+    name = models.CharField(max_length=64, primary_key=True)
+
+    def __str__(self):
+        return self.name
+
+
 class VirtualMachine(models.Model):
     # id = models.AutoField(primary_key=True) is defined Automatically, implicitly
     # HDD and NIC information is stored in another schema (i.e:List / Table)
     name = models.CharField(max_length=64, primary_key=True)
     usage = models.CharField(max_length=256)
-    os = models.CharField(max_length=64)                       # SELECT FROM LIST IN FUTURE DEVELOPMENT
+    os = models.ForeignKey('OperatingSystem', to_field='name', on_delete=models.PROTECT)
     cpu = models.PositiveIntegerField(help_text="[core]")
     memory_GB = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte
     HA_required = models.BooleanField()
@@ -150,7 +164,7 @@ class VmAttachedVirtualHDD(models.Model):
     datastore_name = models.ForeignKey('Datastore', to_field='name', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.virtualmachine_name
+        return str(self.virtualmachine_name)
 
 
 class VmAttachedVirtualNIC(models.Model):
