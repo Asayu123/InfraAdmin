@@ -21,5 +21,6 @@ from ServerAdmin import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/',views.index),
+    url(r'^index/',views.IndexPage.as_view()),
+    url(r'^table/',views.ShowTable.as_view()),
 ]
