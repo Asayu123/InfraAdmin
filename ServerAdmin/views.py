@@ -35,10 +35,14 @@ class ShowTable(TemplateView):
     def get_context_data(self, **kwargs):
 
         try:
-            target_table = kwargs['name']
+            #target_table = kwargs['name']
             table_data = models.VirtualMachine.objects.all()
             return {'TableData': table_data}
         except:
             raise TypeError('requires table name as string, for argument')
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request,'tables.html', context)
 
 
