@@ -22,5 +22,6 @@ from ServerAdmin import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/',views.IndexPage.as_view()),
-    url(r'^table/',views.ShowTable.as_view()),
+    url(r'^table/VirtualMachine/$',views.ShowTableVM.as_view()),
+    #url(r'^table/(?P<name>[a-z|A-Z|0-9]*)/',views.ShowTable.as_view()),
 ]
