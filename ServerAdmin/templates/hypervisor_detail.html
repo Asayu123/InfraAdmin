@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,16 +14,22 @@
     <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'ServerAdmin/sbadmin2/bower_components/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="{% static 'ServerAdmin/sbadmin2/bower_components/metisMenu/dist/metisMenu.min.css' %}" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="{% static 'ServerAdmin/sbadmin2/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css' %}" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="{% static 'ServerAdmin/sbadmin2/bower_components/datatables-responsive/css/responsive.dataTables.scss' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="{% static 'ServerAdmin/sbadmin2/dist/css/sb-admin-2.css' %}" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static 'ServerAdmin/sbadmin2/bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -266,10 +274,10 @@
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
                             </div>
                             <!-- /input-group -->
                         </li>
@@ -348,11 +356,11 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                        <li class="active">
+                        <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a class="active" href="blank.html">Blank Page</a>
+                                    <a href="blank.html">Blank Page</a>
                                 </li>
                                 <li>
                                     <a href="login.html">Login Page</a>
@@ -367,18 +375,124 @@
             <!-- /.navbar-static-side -->
         </nav>
 
-        <!-- Page Content -->
         <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Blank</h1>
-                    </div>
-                    <!-- /.col-lg-12 -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Detail  :  {{ hostname }}</h1>
                 </div>
-                <!-- /.row -->
+                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.container-fluid -->
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Basic Info
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Rack Name</th>
+                                            <th>Rack Position</th>
+                                            <th>Usage</th>
+                                            <th>DC Name</th>
+                                            <th>Cluster Name</th>
+                                            <th>Reserved for HA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for Hypervisor in HV %}
+                                        <tr class="odd gradeC">
+                                            <td>{{ Hypervisor.PhysicalServer_serial.rack_name }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer_serial.rack_unit_start }}
+                                                - {{ Hypervisor.PhysicalServer_serial.rack_unit_end }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster_name.VCenterClusterUsage_name }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster_name.DataCenter_name }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster_name.name }}</td>
+                                            <td>{{ Hypervisor.reserved }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+
+                        <div class="panel-heading">
+                            Physical Server Info
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Server Serial</th>
+                                            <th>Product Name</th>
+                                            <th>CPU [Cores]</th>
+                                            <th>Memory [GB]</th>
+                                            <th>Local Disk [GB]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for Hypervisor in HV %}
+                                        <tr class="odd gradeC">
+                                            <td>{{ Hypervisor.PhysicalServer_serial.serial }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer_serial.product_name }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer_serial.cpu_core_num}}</td>
+                                            <td>{{ Hypervisor.PhysicalServer_serial.memory_capacity }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer_serial.hdd_capacity }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+
+                                                <div class="panel-heading">
+                            Attached HDDs
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>NIC ID</th>
+                                            <th>vLAN ID</th>
+                                            <th>IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for NIC in NICs %}
+                                        <tr class="odd gradeC">
+                                            <td>{{ NIC.id }}</td>
+                                            <td>{{ NIC.vLAN_id }}</td>
+                                            <td>{{ NIC.IP_Address}}</td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
         </div>
         <!-- /#page-wrapper -->
 
@@ -386,16 +500,29 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{% static 'ServerAdmin/sbadmin2/bower_components/jquery/dist/jquery.min.js' %}" ></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'ServerAdmin/sbadmin2/bower_components/bootstrap/dist/js/bootstrap.min.js' %}" ></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="{% static 'ServerAdmin/sbadmin2/bower_components/metisMenu/dist/metisMenu.min.js' %}" ></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="{% static 'ServerAdmin/sbadmin2/bower_components/datatables/media/js/jquery.dataTables.min.js' %}" ></script>
+    <script src="{% static 'ServerAdmin/sbadmin2/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js' %}" ></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="{% static 'ServerAdmin/sbadmin2/dist/js/sb-admin-2.js' %}" ></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
 
 </body>
 

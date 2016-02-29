@@ -297,7 +297,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                            <a href="vm_table.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
@@ -378,7 +378,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Virtual Machines</h1>
+                    <h1 class="page-header">Hypervisors</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -387,7 +387,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            in development environment
+                            in all environment
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -396,21 +396,38 @@
                                     <thead>
                                         <tr>
                                             <th>name</th>
-                                            <th>usage</th>
-                                            <th>OS</th>
-                                            <th>CPU Cores</th>
-                                            <th>Memory [GB]</th>
+                                            <th>Usage</th>
+                                            <th>Reserved for HA</th>
+                                            <th>CPU Usage [Core]</th>
+                                            <th>Memory Usage [GB]</th>
+                                            <th>Localdisk Usage [GB]</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        {% for vm in TableData %}
+                                        {% for HV in TableData %}
                                         <tr class="odd gradeC">
-                                            <td>{{ vm.name }}</td>
-                                            <td>{{ vm.usage }}</td>
-                                            <td>{{ vm.os }}</td>
-                                            <td>{{ vm.cpu }}</td>
-                                            <td>{{ vm.memory_GB }}</td>
+                                            <td><a href="{{ HV.name }}">{{ HV.name }}</a></td>
+                                            <td>{{ HV.vCenterCluster_name.VCenterClusterUsage_name}}</td>
+                                            <td>{{ HV.reserved }}</td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-success" role="progressbar"
+                                                       aria-valuemin="0" aria-valuemax="100" style="width: 20%;min-width: 2em">
+                                                    3/16
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-warning" role="progressbar"
+                                                     aria-valuemin="0" aria-valuemax="100" style="width: 70%;min-width: 2em">
+                                                    160/224
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                                       aria-valuemin="0" aria-valuemax="100" style="width: 87%;min-width: 2em">
+                                                    700/800
+                                                </div>
+                                            </td>
                                         </tr>
                                         {% endfor %}
 

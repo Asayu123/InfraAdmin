@@ -34,18 +34,62 @@ class IndexPage(TemplateView):  # class based view. for new standard.
 
 class ShowTableVM(TemplateView):
 
-    def get_context_data(self, name):
+    def get_context_data(self):
 
         table_data = models.VirtualMachine.objects.all()
         return {'TableData': table_data}
 
     def get(self, request, name="default", *args, **kwargs):
 
-        context = self.get_context_data(name)
-        return render(request,'tables.html', context)
+        context = self.get_context_data()
+        return render(request, 'vm_table.html', context)
 
 
-class ShowDetail:
+class ShowDetailVM(TemplateView):
 
-    def get_context_data(self, **kwargs):
-        pass
+    def get_context_data(self, hostname):
+        vm = models.VirtualMachine.objects.filter(name__exact=hostname)
+        hdds = models.VmAttachedVirtualHDD.objects.filter(virtualmachine_name__exact=hostname)
+        nics = models.VmAttachedVirtualNIC.objects.filter(virtualmachine_name__exact=hostname)
+
+        return {"vm": vm, "hdds": hdds, "nics": nics}
+
+    def get(self, request, *args, **kwargs):
+
+        hostname = kwargs['hostname']
+        query_results = self.get_context_data(hostname)
+        context = {'hostname': hostname, 'VMs': query_results["vm"],
+                   'HDDs': query_results["hdds"], 'NICs': query_results["nics"]}
+
+        return render(request, 'vm_detail.html', context)
+
+
+class ShowTableHypervisor(TemplateView):
+
+    def get_context_data(self):
+
+        table_data = models.HypervisorHost.objects.all()
+        return {'TableData': table_data}
+
+    def get(self, request, name="default", *args, **kwargs):
+
+        context = self.get_context_data()
+        return render(request, 'hypervisor_table.html', context)
+
+
+class ShowDetailHypervisor(TemplateView):
+
+    def get_context_data(self, hostname):
+
+        hv = models.HypervisorHost.objects.filter(name__exact=hostname)
+        vms = models.VirtualMachine.objects.filter(hypervisorhost_name__exact=hostname)
+
+        return {"hv": hv, "vms": vms}
+
+    def get(self, request, *args, **kwargs):
+
+        hostname = kwargs['hostname']
+        query_results = self.get_context_data(hostname)
+        context = {'hostname': hostname, 'HV': query_results["hv"],'VMs': query_results["vms"]}
+
+        return render(request, 'hypervisor_detail.html', context)

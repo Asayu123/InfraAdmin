@@ -138,7 +138,7 @@ class VirtualMachine(models.Model):
     usage = models.CharField(max_length=256)
     os = models.ForeignKey('OperatingSystem', to_field='name', on_delete=models.PROTECT)
     cpu = models.PositiveIntegerField(help_text="[core]")
-    memory_GB = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte
+    memory = models.PositiveIntegerField(help_text="[GB]")  # Unit is GigaByte
     HA_required = models.BooleanField()
 
     # following attribute is linked to another table.
