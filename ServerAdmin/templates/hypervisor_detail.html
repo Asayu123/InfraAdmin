@@ -386,8 +386,57 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
+
                         <div class="panel-heading">
-                            Basic Info
+                            Rack and Datacenter Info
+                        </div>
+
+                    <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Usage</th>
+                                            <th>Reserved for HA</th>
+                                            <th>CPU Usage [Core]</th>
+                                            <th>Memory Usage [GB]</th>
+                                            <th>Localdisk Usage [GB]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for Hypervisor in HV %}
+                                        <tr class="odd gradeC">
+                                            <td>{{ Hypervisor.vCenterCluster_name.VCenterClusterUsage_name}}</td>
+                                            <td>{{ Hypervisor.reserved }}</td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-success" role="progressbar"
+                                                       aria-valuemin="0" aria-valuemax=100 style="width: 20%;min-width: 2em">
+                                                    {{ usedcpu }}/{{ Hypervisor.cpu_core_num_for_vm }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-warning" role="progressbar"
+                                                     aria-valuemin="0" aria-valuemax="100" style="width: 70%;min-width: 2em">
+                                                    160/{{ Hypervisor.memory_capacity_for_vm }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-danger" role="progressbar"
+                                                       aria-valuemin="0" aria-valuemax="100" style="width: 87%;min-width: 2em">
+                                                    700/{{ Hypervisor.hdd_capacity_for_vm }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="panel-heading">
+                            Rack and Datacenter Info
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -457,34 +506,46 @@
                         </div>
                         <!-- /.panel-body -->
 
-                                                <div class="panel-heading">
-                            Attached HDDs
+                        <div class="panel-heading">
+                            Virtual Machines on this Host
                         </div>
                         <!-- /.panel-heading -->
+
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
-                                <table class="table table-striped table-bordered table-hover">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>NIC ID</th>
-                                            <th>vLAN ID</th>
-                                            <th>IP Address</th>
+                                            <th>name</th>
+                                            <th>usage</th>
+                                            <th>OS</th>
+                                            <th>CPU Cores</th>
+                                            <th>Memory [GB]</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        {% for NIC in NICs %}
+                                        {% for vm in VMs %}
                                         <tr class="odd gradeC">
-                                            <td>{{ NIC.id }}</td>
-                                            <td>{{ NIC.vLAN_id }}</td>
-                                            <td>{{ NIC.IP_Address}}</td>
+                                            <td><a href="{% url 'vm_detail' vm.name %}">{{ vm.name }}</a></td>
+                                            <td>{{ vm.usage }}</td>
+                                            <td>{{ vm.os }}</td>
+                                            <td>{{ vm.cpu }}</td>
+                                            <td>{{ vm.memory }}</td>
                                         </tr>
                                         {% endfor %}
 
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- /.table-responsive -->
+                            <div class="well">
+                                <h4>DataTables Usage Information</h4>
+                                <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
+                                <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
+                            </div>
                         </div>
+                        <!-- /.panel-body -->
 
                         <!-- /.panel-body -->
                     </div>

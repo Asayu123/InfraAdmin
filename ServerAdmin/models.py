@@ -57,7 +57,7 @@ class PhysicalServerProduct(models.Model):
 
 class PhysicalServer(models.Model):
     serial = models.CharField(max_length=64, primary_key=True)
-    physicalServerProduct_name = models.ForeignKey('PhysicalServerProduct', to_field='name', on_delete=models.PROTECT)
+    product_name = models.ForeignKey('PhysicalServerProduct', to_field='name', on_delete=models.PROTECT)
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
 
     # specification
@@ -83,6 +83,10 @@ class HypervisorHost(models.Model):
     # management data
     name = models.CharField(max_length=64, primary_key=True)
     reserved = models.BooleanField(default=False)
+
+    cpu_core_num_for_vm = models.PositiveIntegerField(null=False, help_text="[Core]")
+    memory_capacity_for_vm = models.PositiveIntegerField(null=False, help_text="[GB]")
+    hdd_capacity_for_vm = models.PositiveIntegerField(null=False, help_text="[GB]")
 
     # following attribute is for logging.
     creation_date = models.DateTimeField()
@@ -199,3 +203,11 @@ class VmChefRecipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Write Application Model Here
+
+class VirtualMachineDetail:
+
+    def __init__(self,hostname):
+        self.hostname = hostname

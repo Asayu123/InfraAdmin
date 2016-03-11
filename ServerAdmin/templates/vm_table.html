@@ -406,7 +406,7 @@
 
                                         {% for vm in TableData %}
                                         <tr class="odd gradeC">
-                                            <td><a href="{{ vm.name }}">{{ vm.name }}</a></td>
+                                            <td><a href="{% url 'vm_detail' vm.name %}">{{ vm.name }}</a></td>
                                             <td>{{ vm.usage }}</td>
                                             <td>{{ vm.os }}</td>
                                             <td>{{ vm.cpu }}</td>

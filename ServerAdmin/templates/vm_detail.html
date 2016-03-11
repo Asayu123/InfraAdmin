@@ -414,7 +414,7 @@
                                                 <td>Disabled</td>
                                             {% endif %}
 
-                                            <td>{{ vm.hypervisorhost_name }}</td>
+                                            <td><a href="{% url 'hv_detail' vm.hypervisorhost_name %}">{{ vm.hypervisorhost_name }}</a></td>
                                             <td>{{ vm.cpu }}</td>
                                             <td>{{ vm.memory }}</td>
                                         </tr>

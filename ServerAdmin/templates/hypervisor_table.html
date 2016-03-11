@@ -407,7 +407,7 @@
 
                                         {% for HV in TableData %}
                                         <tr class="odd gradeC">
-                                            <td><a href="{{ HV.name }}">{{ HV.name }}</a></td>
+                                            <td><a href="{% url 'hv_detail' HV.name %}">{{ HV.name }}</a></td>
                                             <td>{{ HV.vCenterCluster_name.VCenterClusterUsage_name}}</td>
                                             <td>{{ HV.reserved }}</td>
                                             <td>
