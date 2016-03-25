@@ -39,8 +39,8 @@ class VCenterCluster(models.Model):
 
 class Rack(models.Model):
     name = models.CharField(max_length=64, primary_key=True)  # for human readable name
-    serial = models.CharField(max_length=128, unique=True)
-    console_name = models.CharField(max_length=64, unique=True)  # string, match to node number,console number
+    serial = models.CharField(max_length=128)
+    console_name = models.CharField(max_length=64, blank=True)  # string, match to node number,console number
     environment_name = models.ForeignKey('Environment', to_field='name', on_delete=models.PROTECT)
     num_of_unit = models.IntegerField(default=32)
 
