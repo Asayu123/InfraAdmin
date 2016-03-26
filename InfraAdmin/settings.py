@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'ServerAdmin',
-    'bootstrap3',
     'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
