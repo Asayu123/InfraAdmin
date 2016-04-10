@@ -388,7 +388,7 @@
                     <div class="panel panel-default">
 
                         <div class="panel-heading">
-                            Rack and Datacenter Info
+                            Hypervisor Info
                         </div>
 
                     <div class="panel-body">
@@ -405,30 +405,30 @@
                                     </thead>
                                     <tbody>
 
-                                        {% for Hypervisor in HV %}
+
                                         <tr class="odd gradeC">
-                                            <td>{{ Hypervisor.vCenterCluster_name.VCenterClusterUsage_name}}</td>
+                                            <td>{{ Hypervisor.vCenterCluster.usage}}</td>
                                             <td>{{ Hypervisor.reserved }}</td>
                                             <td>
                                                 <div class="progress-bar progress-bar-success" role="progressbar"
-                                                       aria-valuemin="0" aria-valuemax=100 style="width: 20%;min-width: 2em">
-                                                    {{ usedcpu }}/{{ Hypervisor.cpu_core_num_for_vm }}
+                                                       aria-valuemin="0" aria-valuemax=100 style="width: {{ percent.cpu }}%;min-width: 2em">
+                                                    {{ used.cpu }}/{{ Hypervisor.cpu_core_num_for_vm }}
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="progress-bar progress-bar-warning" role="progressbar"
-                                                     aria-valuemin="0" aria-valuemax="100" style="width: 70%;min-width: 2em">
-                                                    160/{{ Hypervisor.memory_capacity_for_vm }}
+                                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ percent.mem }}%;min-width: 2em">
+                                                    {{ used.mem }}/{{ Hypervisor.memory_capacity_for_vm }}
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="progress-bar progress-bar-danger" role="progressbar"
-                                                       aria-valuemin="0" aria-valuemax="100" style="width: 87%;min-width: 2em">
-                                                    700/{{ Hypervisor.hdd_capacity_for_vm }}
+                                                       aria-valuemin="0" aria-valuemax="100" style="width: {{ percent.hdd }}%;min-width: 2em">
+                                                    {{ used.hdd }}/{{ Hypervisor.hdd_capacity_for_vm }}
                                                 </div>
                                             </td>
                                         </tr>
-                                        {% endfor %}
+
 
                                     </tbody>
                                 </table>
@@ -454,17 +454,17 @@
                                     </thead>
                                     <tbody>
 
-                                        {% for Hypervisor in HV %}
+
                                         <tr class="odd gradeC">
-                                            <td>{{ Hypervisor.PhysicalServer_serial.rack_name }}</td>
-                                            <td>{{ Hypervisor.PhysicalServer_serial.rack_unit_start }}
-                                                - {{ Hypervisor.PhysicalServer_serial.rack_unit_end }}</td>
-                                            <td>{{ Hypervisor.vCenterCluster_name.VCenterClusterUsage_name }}</td>
-                                            <td>{{ Hypervisor.vCenterCluster_name.DataCenter_name }}</td>
-                                            <td>{{ Hypervisor.vCenterCluster_name.name }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.rack.name }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.rack_unit_start }}
+                                                - {{ Hypervisor.PhysicalServer.rack_unit_end }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster.usage }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster.DataCenter.name }}</td>
+                                            <td>{{ Hypervisor.vCenterCluster.name }}</td>
                                             <td>{{ Hypervisor.reserved }}</td>
                                         </tr>
-                                        {% endfor %}
+
 
                                     </tbody>
                                 </table>
@@ -490,15 +490,15 @@
                                     </thead>
                                     <tbody>
 
-                                        {% for Hypervisor in HV %}
+
                                         <tr class="odd gradeC">
-                                            <td>{{ Hypervisor.PhysicalServer_serial.serial }}</td>
-                                            <td>{{ Hypervisor.PhysicalServer_serial.product_name }}</td>
-                                            <td>{{ Hypervisor.PhysicalServer_serial.cpu_core_num}}</td>
-                                            <td>{{ Hypervisor.PhysicalServer_serial.memory_capacity }}</td>
-                                            <td>{{ Hypervisor.PhysicalServer_serial.hdd_capacity }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.serial }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.product }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.cpu_core_num}}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.memory_capacity }}</td>
+                                            <td>{{ Hypervisor.PhysicalServer.hdd_capacity }}</td>
                                         </tr>
-                                        {% endfor %}
+
 
                                     </tbody>
                                 </table>

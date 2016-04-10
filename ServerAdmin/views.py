@@ -42,7 +42,8 @@ class CreateVM(CreateView):
 
     model = models.VirtualMachine
     success_url = reverse_lazy('vm_create')
-    fields = ['name']
+    fields = ['name', 'usage', 'os', 'cpu', 'memory', 'HA_required',
+              'hypervisorhost', 'vminstalledsoftware', 'vmserverspectest', 'vmchefrecipe']
     template_name = 'vm_form.html'
 
     def form_valid(self, form):
@@ -104,24 +105,26 @@ class ShowDetailHypervisor(TemplateView):
 
     def get_context_data(self, hostname):
 
-        hv = models.HypervisorHost.objects.filter(name__exact=hostname)
-        vms = models.VirtualMachine.objects.filter(hypervisorhost_name__exact=hostname)
-        local_vHDDs = models.VmAttachedVirtualHDD.objects.filter(virtualmachine_name__hypervisorhost_name__exact=hostname)
+        hv = models.HypervisorHost.objects.get(name__exact=hostname)
+        vms = models.VirtualMachine.objects.filter(hypervisorhost=hv)  # return a queryset, a list.
+        local_vHDDs = models.VmAttachedVirtualHDD.objects.filter(virtualmachine__hypervisorhost=hv)  # return a queryset
 
         usedCPU = vms.aggregate(Sum('cpu'))['cpu__sum']
         usedMem = vms.aggregate(Sum('memory'))['memory__sum']
         usedHDD = local_vHDDs.aggregate(Sum('capacity'))['capacity__sum']
 
         usedResource = {"cpu": usedCPU, "mem": usedMem, "hdd": usedHDD}
+        usedPersentage = {"cpu": (usedCPU*100 / hv.cpu_core_num_for_vm),  # calculating resource usage
+                          "mem": (usedMem*100 / hv.memory_capacity_for_vm),
+                          "hdd": (usedHDD*100 / hv.hdd_capacity_for_vm) }
 
-        return {"hv": hv, "vms": vms, "used": usedResource}
+        return {"hv": hv, "vms": vms, "used": usedResource, "percent": usedPersentage}
 
     def get(self, request, *args, **kwargs):
 
         hostname = kwargs['hostname']
         query_results = self.get_context_data(hostname)
-        context = {'hostname': hostname, 'HV': query_results["hv"],'VMs': query_results["vms"],
-                   "usedcpu": query_results["used"]["cpu"], "usedmem": query_results["used"]["mem"],
-                   "usedhdd": query_results["used"]["hdd"]}
+        context = {'hostname': hostname, 'Hypervisor': query_results["hv"],'VMs': query_results["vms"],
+                   'used': query_results["used"], 'percent' :query_results["percent"] }
 
         return render(request, 'hypervisor_detail.html', context)

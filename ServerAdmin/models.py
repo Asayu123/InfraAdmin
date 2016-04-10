@@ -161,7 +161,6 @@ class VirtualMachine(BaseModel):
     vmserverspectest = models.ManyToManyField('VmServerSpecTest')
     vmchefrecipe = models.ManyToManyField('VmChefRecipe')
 
-
     def __str__(self):
         return self.name
 
@@ -208,7 +207,7 @@ class VmChefRecipe(BaseModel):
 
 # Write Application Model Here
 
-class VirtualMachineDetail:
-
-    def __init__(self,hostname):
-        self.hostname = hostname
+#class VirtualMachineDetail:
+#
+#    def __init__(self,hostname):
+#        self.hostname = hostname
