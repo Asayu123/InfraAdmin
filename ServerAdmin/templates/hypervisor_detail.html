@@ -411,20 +411,20 @@
                                             <td>{{ Hypervisor.reserved }}</td>
                                             <td>
                                                 <div class="progress-bar progress-bar-success" role="progressbar"
-                                                       aria-valuemin="0" aria-valuemax=100 style="width: {{ percent.cpu }}%;min-width: 2em">
-                                                    {{ used.cpu }}/{{ Hypervisor.cpu_core_num_for_vm }}
+                                                       aria-valuemin="0" aria-valuemax=100 style="width: {{ Hypervisor.utils.cpu }}%;min-width: 2em">
+                                                    {{ Hypervisor.utils.cpu_num }}/{{ Hypervisor.cpu_core_num_for_vm }}
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="progress-bar progress-bar-warning" role="progressbar"
-                                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ percent.mem }}%;min-width: 2em">
-                                                    {{ used.mem }}/{{ Hypervisor.memory_capacity_for_vm }}
+                                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ Hypervisor.utils.mem }}%;min-width: 2em">
+                                                    {{ Hypervisor.utils.mem_num }}/{{ Hypervisor.memory_capacity_for_vm }}
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="progress-bar progress-bar-danger" role="progressbar"
-                                                       aria-valuemin="0" aria-valuemax="100" style="width: {{ percent.hdd }}%;min-width: 2em">
-                                                    {{ used.hdd }}/{{ Hypervisor.hdd_capacity_for_vm }}
+                                                       aria-valuemin="0" aria-valuemax="100" style="width: {{ Hypervisor.utils.hdd }}%;min-width: 2em">
+                                                    {{ Hypervisor.utils.hdd_num }}/{{ Hypervisor.hdd_capacity_for_vm }}
                                                 </div>
                                             </td>
                                         </tr>

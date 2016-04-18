@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.core import validators
 import uuid
 
@@ -96,6 +97,23 @@ class HypervisorHost(BaseModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def utils(self):
+
+        vms = VirtualMachine.objects.filter(hypervisorhost=self)
+        local_VMDKs = VmAttachedVirtualHDD.objects.filter(virtualmachine__hypervisorhost=self)
+
+        cpu_used = vms.aggregate(Sum('cpu'))['cpu__sum']
+        mem_used = vms.aggregate(Sum('memory'))['memory__sum']
+        hdd_used = local_VMDKs.aggregate(Sum('capacity'))['capacity__sum']
+
+        utils = {'cpu_num': cpu_used, 'mem_num': mem_used, 'hdd_num': hdd_used,
+                 'cpu': (cpu_used*100 / self.cpu_core_num_for_vm),
+                 'mem': (mem_used*100 / self.memory_capacity_for_vm),
+                 'hdd': (hdd_used*100 / self.hdd_capacity_for_vm)}
+
+        return utils
 
 
 class Datastore(BaseModel):
