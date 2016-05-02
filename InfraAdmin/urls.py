@@ -28,4 +28,6 @@ urlpatterns = [
 
     url(r'^Hypervisor/$',views.ShowTableHypervisor.as_view(),name='hv_list'),  # Retrieve
     url(r'^Hypervisor/(?P<hostname>[A-z]+[0-9]+.+)',views.ShowDetailHypervisor.as_view(),name='hv_detail'),  # Retrieve
+
+    url(r'^Inherit/$', views.TestURL.as_view(), name='TestURL'),  # Retrieve
 ]

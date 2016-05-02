@@ -38,6 +38,12 @@ class IndexPage(TemplateView):  # class based view. for new standard.
         return render(request, 'index.html', context)
 
 
+class TestURL(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        return render(request,'base_inherit_test.html',context=None)
+
+
 class CreateVM(CreateView):
 
     model = models.VirtualMachine
