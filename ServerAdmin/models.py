@@ -196,7 +196,7 @@ class VmAttachedVirtualHDD(BaseModel):
 class VmAttachedVirtualNIC(BaseModel):
     virtualmachine = models.ForeignKey('VirtualMachine', on_delete=models.CASCADE)
     vLAN_ID = models.ForeignKey('VLAN', on_delete=models.PROTECT)
-    IP_Address = models.GenericIPAddressField()
+    IP_Address = models.GenericIPAddressField(unique=True)
 
     def __str__(self):
         return str(self.virtualmachine.name)

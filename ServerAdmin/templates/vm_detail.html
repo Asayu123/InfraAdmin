@@ -297,7 +297,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="vm_table.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                            <a href="vm_list.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
@@ -393,6 +393,7 @@
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
                                 <table class="table table-striped table-bordered table-hover">
+
                                     <thead>
                                         <tr>
                                             <th>OS</th>
@@ -402,9 +403,8 @@
                                             <th>Memory [GB]</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
 
-                                        {% for vm in VMs %}
+                                    <tbody>
                                         <tr class="odd gradeC">
                                             <td>{{ vm.os }}</td>
 
@@ -414,13 +414,12 @@
                                                 <td>Disabled</td>
                                             {% endif %}
 
-                                            <td><a href="{% url 'hv_detail' vm.hypervisorhost_name %}">{{ vm.hypervisorhost_name }}</a></td>
+                                            <td><a href="{% url 'hv_detail' vm.hypervisorhost.name %}">{{ vm.hypervisorhost.name }}</a></td>
                                             <td>{{ vm.cpu }}</td>
                                             <td>{{ vm.memory }}</td>
                                         </tr>
-                                        {% endfor %}
-
                                     </tbody>
+
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
@@ -445,10 +444,10 @@
 
                                         {% for hdd in HDDs %}
                                         <tr class="odd gradeC">
-                                            <td>{{ hdd.id }}</td>
+                                            <td>{{ hdd.uuid }}</td>
                                             <td>{{ hdd.capacity }}</td>
                                             <td>{{ hdd.mount_point}}</td>
-                                            <td>{{ hdd.datastore_name }}</td>
+                                            <td>{{ hdd.datastore }}</td>
                                         </tr>
                                         {% endfor %}
 
@@ -458,8 +457,8 @@
                         </div>
                         <!-- /.panel-body -->
 
-                                                <div class="panel-heading">
-                            Attached HDDs
+                        <div class="panel-heading">
+                            Attached NICs
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -476,8 +475,8 @@
 
                                         {% for NIC in NICs %}
                                         <tr class="odd gradeC">
-                                            <td>{{ NIC.id }}</td>
-                                            <td>{{ NIC.vLAN_id }}</td>
+                                            <td>{{ NIC.uuid }}</td>
+                                            <td>{{ NIC.vLAN_ID }}</td>
                                             <td>{{ NIC.IP_Address}}</td>
                                         </tr>
                                         {% endfor %}

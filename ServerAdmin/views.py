@@ -72,15 +72,15 @@ class ShowTableVM(TemplateView):
     def get(self, request, name="default", *args, **kwargs):
 
         context = self.get_context_data()
-        return render(request, 'vm_table.html', context)
+        return render(request, 'vm_list.html', context)
 
 
 class ShowDetailVM(TemplateView):
 
     def get_context_data(self, hostname):
-        vm = models.VirtualMachine.objects.filter(name__exact=hostname)
-        hdds = models.VmAttachedVirtualHDD.objects.filter(virtualmachine_name__exact=hostname)
-        nics = models.VmAttachedVirtualNIC.objects.filter(virtualmachine_name__exact=hostname)
+        vm = models.VirtualMachine.objects.get(name__exact=hostname)
+        hdds = models.VmAttachedVirtualHDD.objects.filter(virtualmachine=vm)
+        nics = models.VmAttachedVirtualNIC.objects.filter(virtualmachine=vm)
 
         return {"vm": vm, "hdds": hdds, "nics": nics}
 
@@ -88,7 +88,7 @@ class ShowDetailVM(TemplateView):
 
         hostname = kwargs['hostname']
         query_results = self.get_context_data(hostname)
-        context = {'hostname': hostname, 'VMs': query_results["vm"],
+        context = {'hostname': hostname, 'vm': query_results["vm"],
                    'HDDs': query_results["hdds"], 'NICs': query_results["nics"]}
 
         return render(request, 'vm_detail.html', context)
@@ -104,7 +104,7 @@ class ShowTableHypervisor(TemplateView):
     def get(self, request, name="default", *args, **kwargs):
 
         context = self.get_context_data()
-        return render(request, 'hypervisor_table.html', context)
+        return render(request, 'hypervisor_list.html', context)
 
 
 class ShowDetailHypervisor(TemplateView):
