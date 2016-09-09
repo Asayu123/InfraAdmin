@@ -179,6 +179,8 @@ class VirtualMachine(BaseModel):
     vmserverspectest = models.ManyToManyField('VmServerSpecTest')
     vmchefrecipe = models.ManyToManyField('VmChefRecipe')
 
+    tags = models.ManyToManyField('Tags')
+
     def __str__(self):
         return self.name
 
@@ -221,6 +223,93 @@ class VmChefRecipe(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class DnsRecord(BaseModel):
+    name = models.CharField(max_length=64, null=False)
+    type = models.CharField(max_length=8, null=False)
+    data = models.CharField(max_length=64, null=False)
+    ttl = models.PositiveIntegerField(help_text="[sec]", default=3600)
+    priority = models.PositiveIntegerField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('name', 'type', 'priority')
+
+    def __str__(self):
+        return self.name + ":" + self.type
+
+
+class SecurityGroup(BaseModel):
+    name = models.CharField(max_length=64, null=False, unique=True)
+    description = models.CharField(max_length=64, blank=True, null=True)
+    tags = models.ManyToManyField('Tags')
+
+    def __str__(self):
+        return self.name
+
+
+class Tags(BaseModel):
+    name = models.CharField(max_length=64, null=False, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class FirewallRuleEntry(BaseModel):
+    security_group = models.ForeignKey('SecurityGroup', on_delete=models.CASCADE)
+    name = models.CharField(max_length=32)
+    direction = models.CharField(max_length=16, choices=(('Inbound', 'Inbound'), ('Outbound', 'Outbound')), blank=False, null=False)
+    network = models.ForeignKey('Network', on_delete=models.CASCADE, blank=True, null=True)
+    protocol = models.CharField(max_length=16, choices=(('TCP', 'TCP'), ('UDP', 'UDP')), blank=False,null=False)
+    port_range = models.CharField(max_length=64)  # temporal Design
+
+    class Meta:
+        unique_together = ('security_group', 'direction', 'network', 'port_range')
+
+    def __str__(self):
+        return self.security_group.name + ":" + self.name + ":" + self.direction + ":" \
+               + self.network.name + ":" + self.port_range
+
+    # want to raise error when both network and opposite_group null. but i cant figure out how to do it.
+
+
+class Network(BaseModel):
+    name = models.CharField(max_length=64, blank=False, null=False, unique=True)
+    description = models.CharField(max_length=64, blank=True, null=True)
+    address = models.GenericIPAddressField(blank=False, null=False)
+    prefix = models.PositiveIntegerField(blank=False, null=False)
+
+    class Meta:
+        unique_together = ('address', 'prefix')
+
+    def __str__(self):
+        return self.name
+
+
+class BoundaryFirewall(BaseModel):
+    name = models.CharField(max_length=64, null=False, unique=True)
+    description = models.CharField(max_length=64, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class FirewallRuleEntryBoundary(BaseModel):
+
+    firewall = models.ForeignKey('BoundaryFirewall', on_delete=models.CASCADE)
+    name = models.CharField(max_length=32)
+    direction = models.CharField(max_length=16, choices=(('Inbound', 'Inbound'), ('Outbound', 'Outbound')), blank=False, null=False, )
+    network = models.ForeignKey('Network', on_delete=models.CASCADE, blank=True, null=True)
+    protocol = models.CharField(max_length=16, choices=(('TCP', 'TCP'), ('UDP', 'UDP')), blank=False,null=False)
+    port_range = models.CharField(max_length=64) # temporal Design
+
+    class Meta:
+        unique_together = ('firewall', 'direction', 'network', 'port_range')
+
+    def __str__(self):
+        return self.firewall.name + ":" + self.name + ":" + self.direction + ":" \
+               + self.network.name + ":" + self.port_range
+
 
 
 # Write Application Model Here

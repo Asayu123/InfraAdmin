@@ -124,3 +124,119 @@ class ShowDetailHypervisor(TemplateView):
         context = {'hostname': hostname, 'Hypervisor': query_results['hv'],'VMs': query_results['vms']}
 
         return render(request, 'hypervisor_detail.html', context)
+
+
+class ShowTableNetwork(TemplateView):
+
+    def get_context_data(self):
+        table_data = models.Network.objects.all()
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        context = self.get_context_data()
+        return render(request, 'network_list.html', context)
+
+
+class ShowDetailNetwork(TemplateView):
+
+    def get_context_data(self, network):
+        table_data = models.Network.objects.filter(name__exact=network)
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        network = kwargs["network"]
+        context = self.get_context_data(network)
+        return render(request, 'network_detail.html', context)
+
+class ShowTableDnsRecord(TemplateView):
+
+    def get_context_data(self):
+
+        table_data = models.DnsRecord.objects.all()
+
+        for table in table_data:
+            if (table.priority == None):
+                table.priority = "-"
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        context = self.get_context_data()
+        return render(request, 'dns_record_list.html', context)
+
+
+class ShowTableSecurityGroup(TemplateView):
+
+    def get_context_data(self):
+        table_data = models.SecurityGroup.objects.all()
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        context = self.get_context_data()
+        return render(request, 'security_group_list.html', context)
+
+
+class ShowTableFirewall(TemplateView):
+
+    def get_context_data(self):
+        table_data = models.BoundaryFirewall.objects.all()
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        context = self.get_context_data()
+        return render(request, 'boundary_firewall_list.html', context)
+
+
+class ShowTableFirewallRulesSG(TemplateView):
+
+    def get_context_data(self, security_group):
+        table_data = models.FirewallRuleEntry.objects.filter(security_group__name__exact=security_group)
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        security_group = kwargs["security_group"]
+        context = self.get_context_data(security_group)
+        context.update({'SecurityGroup': security_group})
+
+        return render(request, 'sg_rule_list.html', context)
+
+
+class ShowTableFirewallRulesBD(TemplateView):
+
+    def get_context_data(self, firewall):
+        table_data = models.FirewallRuleEntryBoundary.objects.filter(firewall__name__exact=firewall)
+
+        return {'TableData': table_data}
+
+    def get(self, request, *args, **kwargs):
+
+        firewall = kwargs["firewall"]
+        context = self.get_context_data(firewall)
+        context.update({'Firewall': firewall})
+
+        return render(request, 'fw_rule_list.html', context)
+
+
+class ShowGenericTable(TemplateView):
+
+    def get_context_data(self, model):
+        cl = getattr(models, model)
+        instance = cl()
+        table_data = instance.objects.all()
+
+        return {'TableData': table_data}
+
+    def get(self, request, model="default", *args, **kwargs):
+        context = self.get_context_data(model)
+        return render(request, 'hypervisor_list.html', context)
