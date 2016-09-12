@@ -21,7 +21,7 @@ from ServerAdmin import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/', views.IndexPage.as_view()),
+
     url(r'^VirtualMachine/Create/$', views.CreateVM.as_view(),name='vm_create'),  # Retrieve
     url(r'^VirtualMachine/$',views.ShowTableVM.as_view(), name='vm_list'),  # Retrieve
     url(r'^VirtualMachine/(?P<hostname>[A-z]+[0-9]+.+)', views.ShowDetailVM.as_view(), name='vm_detail'),  # Retrieve
@@ -39,8 +39,6 @@ urlpatterns = [
 
     url(r'^SecurityGroup/$', views.ShowTableSecurityGroup.as_view(), name='security_group_list'),  # Retrieve
     url(r'^Firewall/$', views.ShowTableFirewall.as_view(), name='boundary_firewall_list'),  # Retrieve
-
-    url(r'^Inherit/$', views.TestURL.as_view(), name='TestURL'),  # Retrieve
 
     url(r'^model_(?P<model>[A-z,0-9]+)/$', views.ShowGenericTable.as_view(), name='generic_table'),  # Retrieve
 ]
