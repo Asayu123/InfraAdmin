@@ -31,6 +31,7 @@ urlpatterns = [
 
     url(r'^Network/$', views.ShowTableNetwork.as_view(), name='network_list'),
     url(r'^Network/(?P<network>.+)', views.ShowDetailNetwork.as_view(), name='network_detail'),
+
     url(r'^DnsRecord/$', views.ShowTableDnsRecord.as_view(), name='dns_record_list'),
 
     url(r'^SecurityGroup/(?P<security_group>.+)', views.ShowTableFirewallRulesSG.as_view(), name='sg_rule_list'),  # Retrieve

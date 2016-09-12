@@ -19,29 +19,9 @@ from django.core.urlresolvers import reverse_lazy
 # Create your views here.
 
 
-
-
+# Form Definition Write here
 class NameForm(forms.Form):
     your_name = forms.CharField(label='Your name', max_length=100)
-
-
-def index(request):  # func based view, not recommended in Django
-
-    context = {"form": NameForm()}
-    return render(request, 'index.html', context)
-
-
-class IndexPage(TemplateView):  # class based view. for new standard.
-
-    def get(self, request, *args, **kwargs):
-        context = {"form": NameForm()}
-        return render(request, 'index.html', context)
-
-
-class TestURL(TemplateView):
-
-    def get(self, request, *args, **kwargs):
-        return render(request,'base_inherit_test.html',context=None)
 
 
 class CreateVM(CreateView):
@@ -62,6 +42,7 @@ class CreateVM(CreateView):
         return HttpResponse("form is invalid.. this is just an HttpResponse object")  # Under Construction
 
 
+# Refer view starts Here
 class ShowTableVM(TemplateView):
 
     def get_context_data(self):
@@ -152,6 +133,7 @@ class ShowDetailNetwork(TemplateView):
         context = self.get_context_data(network)
         return render(request, 'network_detail.html', context)
 
+
 class ShowTableDnsRecord(TemplateView):
 
     def get_context_data(self):
@@ -169,6 +151,9 @@ class ShowTableDnsRecord(TemplateView):
         context = self.get_context_data()
         return render(request, 'dns_record_list.html', context)
 
+
+class CreateDnsRecord:
+    raise NotImplementedError
 
 class ShowTableSecurityGroup(TemplateView):
 
