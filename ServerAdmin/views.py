@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
-from django import forms
+#from django import forms
 
 from django.http import *
 
@@ -16,12 +16,9 @@ from ServerAdmin import models
 from django.views.generic.edit import CreateView
 from django.core.urlresolvers import reverse_lazy
 
+from ServerAdmin import forms
+
 # Create your views here.
-
-
-# Form Definition Write here
-class NameForm(forms.Form):
-    your_name = forms.CharField(label='Your name', max_length=100)
 
 
 class CreateVM(CreateView):
@@ -152,8 +149,21 @@ class ShowTableDnsRecord(TemplateView):
         return render(request, 'dns_record_list.html', context)
 
 
-class CreateDnsRecord:
-    raise NotImplementedError
+class FormDnsRecord(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+
+        form = forms.DnsRecordForm()
+        context = {"form": form}
+        context.update({"title": "Create Record"})
+        context.update({"subtitle": "DNS Record"})
+
+        return render(request, 'generic_form.html', context)
+
+
+class CreateDnsRecord(TemplateView):
+    pass
+
 
 class ShowTableSecurityGroup(TemplateView):
 
@@ -195,6 +205,36 @@ class ShowTableFirewallRulesSG(TemplateView):
         context.update({'SecurityGroup': security_group})
 
         return render(request, 'sg_rule_list.html', context)
+
+
+class FormFirewallRules(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+
+        security_group = kwargs["security_group"]
+        form = forms.FirewallRuleForm()
+
+        context = {"form": form}
+        context.update({"title": "Create New Rule"})
+        context.update({"subtitle": "for {0}".format(security_group)})
+        context.update({"security_group": security_group})
+
+        return render(request, 'generic_form.html', context)
+
+    
+class FormBoundaryFirewallRules(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+
+        firewall = kwargs["firewall"]
+        form = forms.FirewallRuleForm()
+
+        context = {"form": form}
+        context.update({"title": "Create New Rule"})
+        context.update({"subtitle": "for {0}".format(firewall)})
+        context.update({"security_group": firewall})
+
+        return render(request, 'generic_form.html', context)
 
 
 class ShowTableFirewallRulesBD(TemplateView):

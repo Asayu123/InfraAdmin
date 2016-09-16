@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content-title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ subtitle }}
+            </div>
+            <!-- /.panel-body -->
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form role="form">
+                            <div class="form-group">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+
+                                    {% for field in form %}
+                                        <div class="form-group">
+                                            {{ field.errors }}
+                                            {{ field.label_tag }}
+
+                                            {% if field.field.choices %}
+                                                <select class="form-control">
+                                                    {% for choice in field.field.choices %}
+                                                        <option>{{ choice.1 }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% else %}
+                                                <input class="form-control">
+                                            {% endif %}
+
+                                            {% if field.help_text %}
+                                                <p class="help-block">{{ field.help_text|safe }}</p>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+
+                                    <input class="form-control btn-primary" type="submit" value="Submit" />
+
+                                </form>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>        <!-- /.table-responsive -->
+        <!-- /.panel -->
+        <div class="pull-left">
+            <a type="button" class="btn btn-default" onClick=history.back()>Cancel</a>
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
+{% endblock %}
+

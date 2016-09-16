@@ -226,9 +226,10 @@ class VmChefRecipe(BaseModel):
 
 
 class DnsRecord(BaseModel):
-    name = models.CharField(max_length=64, null=False)
-    type = models.CharField(max_length=8, null=False)
-    data = models.CharField(max_length=64, null=False)
+    name = models.CharField(max_length=64, null=False, help_text="such as hostname")
+    type = models.CharField(max_length=8, null=False,
+                            choices=(('A', 'A'), ('MX', 'MX'),('CNAME', 'CNAME'), ('TXT', 'TXT')))
+    data = models.CharField(max_length=64, null=False, help_text="such as ipaddress")
     ttl = models.PositiveIntegerField(help_text="[sec]", default=3600)
     priority = models.PositiveIntegerField(null=True, blank=True)
 
