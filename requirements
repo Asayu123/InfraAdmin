@@ -1,8 +1,4 @@
-python (3.5.0)
-Django (1.9)
-django-bootstrap3 (6.2.2)
-django-import-export (0.4.4)
-django-debug-toolbar(1.4)
-
-startbootstrap-sb-admin-2-1.0.8
-
+Django==1.9
+django-bootstrap3==6.2.2
+django-debug-toolbar==1.4
+sqlparse==0.2.1
