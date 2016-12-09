@@ -2,3 +2,4 @@ Django==1.9
 django-bootstrap3==6.2.2
 django-debug-toolbar==1.4
 sqlparse==0.2.1
+django-import-export==0.4.4
