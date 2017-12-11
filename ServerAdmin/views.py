@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 #from django import forms
 
 from django.http import *
@@ -19,6 +19,17 @@ from django.core.urlresolvers import reverse_lazy
 from ServerAdmin import forms
 
 # Create your views here.
+
+
+class Default(TemplateView):
+    def get(self, request, *args, **kwargs):
+        return redirect(reverse_lazy('index'))
+
+
+class Index(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'index.html')
 
 
 class CreateVM(CreateView):

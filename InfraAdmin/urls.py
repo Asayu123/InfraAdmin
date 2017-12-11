@@ -21,6 +21,8 @@ from ServerAdmin import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.Default.as_view(), name='default'),
+    url(r'^index/', views.Index.as_view(), name='index'),
 
     url(r'^VirtualMachine/Create/$', views.CreateVM.as_view(),name='vm_create'),  # Retrieve
     url(r'^VirtualMachine/$',views.ShowTableVM.as_view(), name='vm_list'),  # Retrieve
