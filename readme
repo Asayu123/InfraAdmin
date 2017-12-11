@@ -1,8 +1,0 @@
-work in progress.
-
-change security key before you use.
-
-we use 'django_extensions' for maintenance, especially for DB ,
-but can be removed from settings.py for regular operation.
-
-tested with Python 3.5.0
