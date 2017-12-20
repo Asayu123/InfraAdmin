@@ -12,36 +12,32 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-6">
-                        <form role="form">
-                            <div class="form-group">
-                                <form action="" method="post">
-                                    {% csrf_token %}
+                        <form action="" method="post">
+                            {% csrf_token %}
 
-                                    {% for field in form %}
-                                        <div class="form-group">
-                                            {{ field.errors }}
-                                            {{ field.label_tag }}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.errors }}
+                                    {{ field.label_tag }}
 
-                                            {% if field.field.choices %}
-                                                <select class="form-control">
-                                                    {% for choice in field.field.choices %}
-                                                        <option>{{ choice.1 }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            {% else %}
-                                                <input class="form-control">
-                                            {% endif %}
+                                    {% if field.field.choices %}
+                                        <select class="form-control">
+                                            {% for choice in field.field.choices %}
+                                                <option>{{ choice.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    {% else %}
+                                        <input class="form-control">
+                                    {% endif %}
 
-                                            {% if field.help_text %}
-                                                <p class="help-block">{{ field.help_text|safe }}</p>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
+                                    {% if field.help_text %}
+                                        <p class="help-block">{{ field.help_text|safe }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
 
-                                    <input class="form-control btn-primary" type="submit" value="Submit" />
+                            <input class="form-control btn-primary" type="submit" value="Submit" />
 
-                                </form>
-                            </div>
                         </form>
                     </div>
                 </div>
