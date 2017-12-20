@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^SecurityGroup/(?P<security_group>.+)/Form$', views.FormFirewallRules.as_view(), name='firewall_rule_form'),  # Retrieve
     url(r'^SecurityGroup/(?P<security_group>.+)/*$', views.ShowTableFirewallRulesSG.as_view(), name='sg_rule_list'),  # Retrieve
 
-    url(r'^Firewall/(?P<firewall>.+)/Form$', views.FormBoundaryFirewallRules.as_view(), name='bd_fw_rule_list'),
+    url(r'^Firewall/(?P<firewall>.+)/Form$', views.FormBoundaryFirewallRules.as_view(), name='bd_fw_rule_form'),
     url(r'^Firewall/(?P<firewall>.+)', views.ShowTableFirewallRulesBD.as_view(), name='fw_rule_list'),# Retrieve
 
     url(r'^SecurityGroup/$', views.ShowTableSecurityGroup.as_view(), name='security_group_list'),  # Retrieve
