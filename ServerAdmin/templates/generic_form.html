@@ -21,13 +21,13 @@
                                     {{ field.label_tag }}
 
                                     {% if field.field.choices %}
-                                        <select class="form-control">
+                                        <select class="form-control" name={{ field.name }} id={{ field.label }}>
                                             {% for choice in field.field.choices %}
-                                                <option>{{ choice.1 }}</option>
+                                                <option value={{ choice.0 }}>{{ choice.1 }}</option>
                                             {% endfor %}
                                         </select>
                                     {% else %}
-                                        <input class="form-control">
+                                        <input class="form-control" name={{ field.name }} id={{ field.label }}>
                                     {% endif %}
 
                                     {% if field.help_text %}
