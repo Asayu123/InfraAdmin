@@ -9,6 +9,8 @@ class DnsRecordForm(forms.ModelForm):
 
 
 class FirewallRuleForm(forms.ModelForm):
+
     class Meta:
         model = models.FirewallRuleEntryBoundary
-        fields = ['name', 'direction', 'network', 'protocol', 'port_range']
+        fields = ['name', 'direction', 'network', 'protocol', 'port_range', 'firewall']
+        widgets = {'firewall': forms.HiddenInput()}

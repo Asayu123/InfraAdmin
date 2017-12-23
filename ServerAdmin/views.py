@@ -238,14 +238,24 @@ class FormBoundaryFirewallRules(TemplateView):
     def get(self, request, *args, **kwargs):
 
         firewall = kwargs["firewall"]
-        form = forms.FirewallRuleForm()
+        fw_name = models.BoundaryFirewall.objects.filter(uuid__exact=firewall).values()[0]['name']
+        form = forms.FirewallRuleForm(initial={'firewall': firewall})
 
         context = {"form": form}
         context.update({"title": "Create New Rule"})
-        context.update({"subtitle": "for {0}".format(firewall)})
-        context.update({"security_group": firewall})
+        context.update({"subtitle": "on {0}".format(fw_name)})
 
         return render(request, 'generic_form.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = forms.FirewallRuleForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            # You have to append kwargs to resolve path parameters.
+            return redirect(to=reverse_lazy('fw_rule_list', kwargs=kwargs))
+        else:
+            print(form.errors)
+            return redirect(to=reverse_lazy('fw_rule_list', kwargs=kwargs))
 
 
 class ShowTableFirewallRulesBD(TemplateView):
@@ -254,7 +264,7 @@ class ShowTableFirewallRulesBD(TemplateView):
         table_data = models.FirewallRuleEntryBoundary.objects.filter(firewall__uuid__exact=firewall)
         fw_name = models.BoundaryFirewall.objects.filter(uuid__exact=firewall).values()[0]['name']
 
-        return {'TableData': table_data, 'Fw_Name': fw_name}
+        return {'TableData': table_data, 'Fw_Name': fw_name, 'Fw_Uuid': firewall}
 
     def get(self, request, *args, **kwargs):
 
