@@ -6,7 +6,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                of firewall <b>{{ Firewall }}</b>
+                of firewall <b>{{ Fw_Name }}</b>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -48,7 +48,7 @@
                     <h1></h1><!-- temporal blank space -->
                 </div>
                 <div class="pull-left">
-                    <a type="button" class="btn btn-primary" href="{% url 'bd_fw_rule_form' Firewall %}">Create Rule</a>
+                    <a type="button" class="btn btn-primary" href="{% url 'bd_fw_rule_form' Fw_Name %}">Create Rule</a>
                     <a type="button" class="btn btn-default" onClick=history.back() >Cancel</a>
                 </div>
 

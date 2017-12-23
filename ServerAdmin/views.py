@@ -251,15 +251,15 @@ class FormBoundaryFirewallRules(TemplateView):
 class ShowTableFirewallRulesBD(TemplateView):
 
     def get_context_data(self, firewall):
-        table_data = models.FirewallRuleEntryBoundary.objects.filter(firewall__name__exact=firewall)
+        table_data = models.FirewallRuleEntryBoundary.objects.filter(firewall__uuid__exact=firewall)
+        fw_name = models.BoundaryFirewall.objects.filter(uuid__exact=firewall).values()[0]['name']
 
-        return {'TableData': table_data}
+        return {'TableData': table_data, 'Fw_Name': fw_name}
 
     def get(self, request, *args, **kwargs):
 
         firewall = kwargs["firewall"]
         context = self.get_context_data(firewall)
-        context.update({'Firewall': firewall})
 
         return render(request, 'fw_rule_list.html', context)
 
