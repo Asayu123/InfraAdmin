@@ -10,5 +10,5 @@ class DnsRecordForm(forms.ModelForm):
 
 class FirewallRuleForm(forms.ModelForm):
     class Meta:
-        model = models.FirewallRuleEntry
+        model = models.FirewallRuleEntryBoundary
         fields = ['name', 'direction', 'network', 'protocol', 'port_range']
